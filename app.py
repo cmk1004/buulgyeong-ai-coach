@@ -1,4 +1,4 @@
-"""부울경 생활비 절감·복지혜택 AI 코치 — STEP 2 MVP
+"""부울경 생활비 절감·복지혜택 AI 코치 — STEP 5 MVP (+ 디자인 개선)
 
 실행: streamlit run app.py
 """
@@ -6,6 +6,7 @@
 import plotly.express as px
 import streamlit as st
 
+from src import ui
 from src.data_loader import load_expense_benchmarks, load_glossary, load_policies, load_saving_tips
 from src.easy_explain import find_terms, original_text
 from src.local_policies import count_by_region_and_category, filter_local_policies
@@ -13,6 +14,7 @@ from src.recommender import count_good_matches, income_percent, recommend_polici
 from src.saving_coach import CATEGORIES, check_expenses
 
 st.set_page_config(page_title="부울경 생활비·복지 AI 코치", page_icon="💰", layout="centered")
+ui.apply_style()
 
 TITLE = "부울경 생활비 절감·복지혜택 AI 코치"
 SLOGAN = "내가 아낄 수 있는 생활비와 받을 수 있는 지원금, AI가 한 번에 찾아드립니다."
@@ -111,9 +113,10 @@ def show_saving_results(results: list[dict]):
     for item in results:
         with st.container(border=True):
             if item["status"] == "확인 필요":
-                st.markdown(f"#### 🔶 {item['category']} — 확인 필요")
+                badge = ui.chips([("🔶 확인 필요", "warn")])
             else:
-                st.markdown(f"#### ✅ {item['category']} — 양호")
+                badge = ui.chips([("✅ 양호", "real")])
+            st.markdown(f"{badge}<h4 style='margin:2px 0 8px 0;padding:0'>{item['category']}</h4>", unsafe_allow_html=True)
             col1, col2, col3 = st.columns(3)
             col1.metric("내 지출", f"{item['amount']:,}원")
             col2.metric("비슷한 가구 평균", f"{item['average']:,}원")
@@ -152,24 +155,45 @@ def back_button():
 
 
 # ---------------- 메인 화면 ----------------
+def go_category(category: str):
+    """'자주 찾는 분야'를 누르면 그 분야로 걸러진 우리동네 화면으로 갑니다."""
+    st.session_state["local_categories"] = [category]
+    st.session_state.page = "local"
+
+
+CATEGORY_ICONS = {
+    "고령층": "👵", "1인가구": "🏠", "생활비": "💳", "의료": "🏥",
+    "주거": "🔑", "청년": "🎓", "출산·육아": "👶", "일자리": "💼",
+}
+
+
 def main_page():
-    st.title(TITLE)
-    st.write(SLOGAN)
-    st.divider()
+    ui.hero(TITLE, SLOGAN)
 
-    col1, col2, col3 = st.columns(3)
-    col1.button("AI 맞춤 지원금 찾기", on_click=go, args=("input",), use_container_width=True, type="primary")
-    col2.button("AI 생활비 절감 코치", on_click=go, args=("saving",), use_container_width=True)
-    col3.button("우리동네 지원사업", on_click=go, args=("local",), use_container_width=True)
+    services = [
+        ("🎯", "AI 맞춤 지원금 찾기", "나이·소득·가구형태를 입력하면 받을 수 있는 지원제도를 적합도 순으로 추천합니다.", "input"),
+        ("✂️", "AI 생활비 절감 코치", "통신비·공공요금·보험료를 비슷한 가구 평균과 비교해 아낄 곳을 찾습니다.", "saving"),
+        ("📍", "우리동네 지원사업", "부산·울산·경남 지역을 고르면 우리 동네 지원사업만 모아 봅니다.", "local"),
+    ]
+    for col, (icon, title, desc, page) in zip(st.columns(3), services):
+        with col:
+            ui.service_card(icon, title, desc)
+            st.button("바로가기 →", key=f"go_{page}", on_click=go, args=(page,),
+                      use_container_width=True, type="primary" if page == "input" else "secondary")
 
-    st.caption(MOCK_NOTICE)
+    ui.section_title("자주 찾는 분야")
+    for i, col in enumerate(st.columns(4) + st.columns(4)):
+        category = INTERESTS[i]
+        col.button(f"{CATEGORY_ICONS[category]} {category}", key=f"cat_{category}",
+                   on_click=go_category, args=(category,), use_container_width=True)
+
+    st.markdown(f'<p class="notice">{MOCK_NOTICE}</p>', unsafe_allow_html=True)
 
 
 # ---------------- 입력 화면 + 추천 결과 ----------------
 def input_page():
     back_button()
-    st.header("AI 맞춤 지원금 찾기")
-    st.write("기본 정보를 입력하면 적합도가 높은 지원제도 5개를 추천해 드립니다.")
+    ui.page_head("🎯 AI 맞춤 지원금 찾기", "기본 정보를 입력하면 적합도가 높은 지원제도 5개를 추천해 드립니다.")
 
     # 지역을 바꾸면 세부지역 목록이 바로 바뀌도록 form 밖에 둡니다.
     col1, col2 = st.columns(2)
@@ -213,8 +237,7 @@ def input_page():
         "interests": interests,
     }
 
-    st.divider()
-    st.subheader("추천 결과")
+    ui.section_title("📋 추천 결과")
     st.caption(f"입력하신 소득은 2026년 기준중위소득의 약 {percent:.0f}% 입니다(참고용 계산).")
 
     policies = get_policies()
@@ -233,12 +256,12 @@ def input_page():
     col2.metric("절감 가능 항목", f"{check_count}건")
     col3.metric("월 최대 절감 여지", f"{total_saving:,}원", help="저렴한 대안 기준 참고용 금액")
 
-    st.markdown("### 💰 추천 지원제도 TOP 5")
+    ui.section_title("💰 추천 지원제도 TOP 5")
     if results.empty:
         st.warning("조건에 맞는 지원제도를 찾지 못했습니다.")
     for _, row in results.iterrows():
         with st.container(border=True):
-            st.markdown(f"#### {row['policy_name']}")
+            ui.policy_head(row, score=row["score"])
             st.progress(row["score"] / 100, text=f"AI 적합도 {row['score']}점 / 100점")
             st.write(f"**지원 내용**: {row['support_content']}")
             st.write("**추천 이유**")
@@ -248,18 +271,17 @@ def input_page():
             easy_button(row)
             data_badge(row)
 
-    st.markdown("### ✂️ 생활비 절감 진단")
+    ui.section_title("✂️ 생활비 절감 진단")
     show_saving_results(saving_results)
 
     st.info(SCORE_NOTICE)
-    st.caption(MOCK_NOTICE)
+    st.markdown(f'<p class="notice">{MOCK_NOTICE}</p>', unsafe_allow_html=True)
 
 
 # ---------------- 생활비 절감 코치 / 우리동네 지원사업 ----------------
 def saving_page():
     back_button()
-    st.header("AI 생활비 절감 코치")
-    st.write("매달 내는 통신비·공공요금·보험료를 입력하면, 비슷한 가구와 비교해 아낄 곳을 찾아 드립니다.")
+    ui.page_head("✂️ AI 생활비 절감 코치", "매달 내는 통신비·공공요금·보험료를 입력하면, 비슷한 가구와 비교해 아낄 곳을 찾아 드립니다.")
 
     with st.form("saving_form"):
         household_size = st.number_input("가구원 수(본인 포함)", min_value=1, max_value=10, value=1, step=1)
@@ -275,7 +297,7 @@ def saving_page():
         show_saving_results(saving_results)
 
     tips = get_saving_tips()
-    st.markdown("#### 전체 절감 팁")
+    ui.section_title("💡 전체 절감 팁")
     st.dataframe(
         tips[["category", "description", "estimated_saving"]].rename(
             columns={"category": "분야", "description": "절감 방법", "estimated_saving": "예상 절감액(월, 원)"}
@@ -288,8 +310,7 @@ def saving_page():
 
 def local_page():
     back_button()
-    st.header("우리동네 지원사업")
-    st.write("지역을 고르면 그 지역에서 받을 수 있는 지원사업만 모아 보여 드립니다.")
+    ui.page_head("📍 우리동네 지원사업", "지역을 고르면 그 지역에서 받을 수 있는 지원사업만 모아 보여 드립니다.")
 
     policies = get_policies()
     if real_only_toggle("local_real_only"):
@@ -306,7 +327,9 @@ def local_page():
 
     for _, row in local.iterrows():
         target = row["region"] + " 전체" if row["city"] == "전체" else row["city"]
-        with st.expander(f"[{row['category']}] {row['policy_name']} · {target}"):
+        mark = "🧪" if row["is_mock"] else "✅"
+        with st.expander(f"{mark} [{row['category']}] {row['policy_name']} · {target}"):
+            ui.policy_head(row)
             st.write(f"**지원 내용**: {row['support_content']}")
             st.write(f"**대상 연령**: {row['target_age']}세 · **가구형태**: {row['household_type'].replace('|', ', ')}")
             st.write(f"**소득 조건**: {row['income_condition']} · **주거형태**: {row['housing_type'].replace('|', ', ')}")
@@ -316,17 +339,22 @@ def local_page():
                 easy_explanation(row)
             data_badge(row)
 
-    st.markdown("#### 부울경 분야별 지원사업 수")
+    ui.section_title("📊 부울경 분야별 지원사업 수")
     counts = count_by_region_and_category(policies)
     fig = px.bar(
         counts, x="category", y="count", color="region", barmode="group",
         labels={"category": "분야", "count": "정책 수", "region": "지역"},
         category_orders={"region": list(REGIONS.keys()), "category": INTERESTS},
+        color_discrete_map={"부산": "#1F5BD8", "울산": "#4FA3F7", "경남": "#17A673"},
     )
-    fig.update_layout(height=360, margin=dict(l=10, r=10, t=10, b=10), yaxis=dict(dtick=1))
+    fig.update_layout(
+        height=360, margin=dict(l=10, r=10, t=10, b=10), yaxis=dict(dtick=1, gridcolor="#E6EBF2"),
+        plot_bgcolor="#FFFFFF", paper_bgcolor="#FFFFFF", font=dict(family="Pretendard, sans-serif"),
+        legend=dict(orientation="h", y=1.08, x=0),
+    )
     st.plotly_chart(fig, use_container_width=True)
 
-    st.caption(MOCK_NOTICE)
+    st.markdown(f'<p class="notice">{MOCK_NOTICE}</p>', unsafe_allow_html=True)
 
 
 PAGES = {"main": main_page, "input": input_page, "saving": saving_page, "local": local_page}
