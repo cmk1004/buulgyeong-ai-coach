@@ -3,7 +3,9 @@
 색상·글꼴·카드 모양을 한곳에 모아 두어, app.py는 기능 코드만 보이게 합니다.
 """
 
+import base64
 import html
+from pathlib import Path
 
 import streamlit as st
 
@@ -51,6 +53,11 @@ h1, h2, h3, h4 {{ letter-spacing: -0.02em; color: #1E2530; }}
 }}
 .hero h1 {{ color: #FFFFFF; font-size: 32px; line-height: 1.3; margin: 0 0 10px 0; padding: 0; }}
 .hero p {{ color: rgba(255,255,255,0.92); font-size: 17px; margin: 0; }}
+.hero-row {{ display: flex; align-items: center; justify-content: space-between; gap: 24px; }}
+.hero-logo {{ width: 112px; height: 112px; flex-shrink: 0; border-radius: 28px;
+    border: 4px solid rgba(255, 255, 255, 0.9); background: #FFFFFF;
+    box-shadow: 0 6px 18px rgba(10, 30, 80, 0.25); }}
+@media (max-width: 640px) {{ .hero-logo {{ display: none; }} }}
 
 /* 하위 화면 제목 띠 */
 .page-head {{
@@ -103,10 +110,15 @@ def _e(text) -> str:
     return html.escape(str(text))
 
 
-def hero(title: str, slogan: str):
+def hero(title: str, slogan: str, logo_path=None):
+    """메인 상단 안내 상자. logo_path가 있으면 오른쪽에 로고를 함께 보여줍니다."""
+    logo_html = ""
+    if logo_path and Path(logo_path).exists():
+        data = base64.b64encode(Path(logo_path).read_bytes()).decode()
+        logo_html = f'<img class="hero-logo" src="data:image/png;base64,{data}" alt="서비스 로고">'
     st.markdown(
-        f'<div class="hero"><span class="badge">부산 · 울산 · 경남</span>'
-        f"<h1>{_e(title)}</h1><p>{_e(slogan)}</p></div>",
+        f'<div class="hero"><div class="hero-row"><div><span class="badge">부산 · 울산 · 경남</span>'
+        f"<h1>{_e(title)}</h1><p>{_e(slogan)}</p></div>{logo_html}</div></div>",
         unsafe_allow_html=True,
     )
 

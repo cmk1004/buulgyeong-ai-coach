@@ -3,6 +3,8 @@
 실행: streamlit run app.py
 """
 
+from pathlib import Path
+
 import plotly.express as px
 import streamlit as st
 
@@ -13,7 +15,8 @@ from src.local_policies import count_by_region_and_category, filter_local_polici
 from src.recommender import count_good_matches, income_percent, recommend_policies
 from src.saving_coach import CATEGORIES, check_expenses
 
-st.set_page_config(page_title="부울경 생활비·복지 AI 코치", page_icon="💰", layout="centered")
+ASSETS = Path(__file__).parent / "assets"
+st.set_page_config(page_title="부울경 생활비·복지 AI 코치", page_icon=str(ASSETS / "logo_192.png"), layout="centered")
 ui.apply_style()
 
 TITLE = "부울경 생활비 절감·복지혜택 AI 코치"
@@ -168,7 +171,7 @@ CATEGORY_ICONS = {
 
 
 def main_page():
-    ui.hero(TITLE, SLOGAN)
+    ui.hero(TITLE, SLOGAN, logo_path=ASSETS / "logo_192.png")
 
     services = [
         ("🎯", "AI 맞춤 지원금 찾기", "나이·소득·가구형태를 입력하면 받을 수 있는 지원제도를 적합도 순으로 추천합니다.", "input"),

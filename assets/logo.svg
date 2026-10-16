@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1F5BD8"/>
+      <stop offset="1" stop-color="#3D7EF2"/>
+    </linearGradient>
+  </defs>
+  <!-- 바탕: 둥근 사각형 -->
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#bg)"/>
+  <!-- 말풍선(AI 코치) -->
+  <path d="M256 104c-92 0-164 60-164 136 0 44 24 83 62 108l-14 62 66-38c16 4 32 6 50 6 92 0 164-60 164-138S348 104 256 104z" fill="#FFFFFF"/>
+  <!-- 동전 -->
+  <circle cx="256" cy="240" r="84" fill="#17A673"/>
+  <circle cx="256" cy="240" r="68" fill="none" stroke="#FFFFFF" stroke-width="8" opacity="0.55"/>
+  <!-- 원화 기호 ₩ -->
+  <path d="M206 198l22 88 28-72 28 72 22-88" fill="none" stroke="#FFFFFF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M200 232h112M204 254h104" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"/>
+  <!-- AI 반짝임 -->
+  <path d="M392 92l10 26 26 10-26 10-10 26-10-26-26-10 26-10z" fill="#FFD54A"/>
+  <path d="M430 168l5 13 13 5-13 5-5 13-5-13-13-5 13-5z" fill="#FFD54A"/>
+</svg>
