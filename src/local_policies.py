@@ -18,9 +18,9 @@ def filter_local_policies(policies: pd.DataFrame, region: str, city: str = "전�
     if categories:
         result = result[result["category"].isin(categories)]
 
-    # 광역 전체 대상 정책을 먼저, 그다음 세부지역 정책을 보여줍니다.
+    # 실제 정책을 먼저, 그 안에서 광역 전체 대상 → 세부지역 순서로 보여줍니다.
     result = result.assign(_order=(result["city"] != "전체").astype(int))
-    return result.sort_values(["_order", "city", "policy_id"]).drop(columns="_order").reset_index(drop=True)
+    return result.sort_values(["is_mock", "_order", "city", "policy_id"]).drop(columns="_order").reset_index(drop=True)
 
 
 def count_by_region_and_category(policies: pd.DataFrame) -> pd.DataFrame:

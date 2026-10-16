@@ -16,7 +16,17 @@ def load_policies() -> pd.DataFrame:
     df = pd.concat([real, mock], ignore_index=True)
     df["is_mock"] = df["is_mock"].str.lower() == "true"
     df["status_note"] = df["status_note"].fillna("")
+
+    # 쉬운 설명(정책 쉽게 설명하기)을 policy_id 기준으로 붙입니다.
+    easy = pd.read_csv(REAL_DIR / "policy_easy.csv", dtype=str)
+    df = df.merge(easy, on="policy_id", how="left")
+    df["easy_text"] = df["easy_text"].fillna("")
     return df
+
+
+def load_glossary() -> pd.DataFrame:
+    """어려운 행정용어와 쉬운 뜻을 불러옵니다."""
+    return pd.read_csv(REAL_DIR / "glossary.csv", dtype=str)
 
 
 def load_saving_tips() -> pd.DataFrame:

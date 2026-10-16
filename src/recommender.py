@@ -126,7 +126,8 @@ def recommend_policies(policies: pd.DataFrame, user: dict, top_n: int = 5) -> pd
         return pd.DataFrame()
 
     result = pd.DataFrame(rows)
-    result = result.sort_values(["score", "policy_id"], ascending=[False, True])
+    # 점수가 같으면 실제 정책(is_mock=False)을 먼저 보여줍니다.
+    result = result.sort_values(["score", "is_mock", "policy_id"], ascending=[False, True, True])
     return result.head(top_n).reset_index(drop=True)
 
 

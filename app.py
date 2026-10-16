@@ -6,7 +6,8 @@
 import plotly.express as px
 import streamlit as st
 
-from src.data_loader import load_expense_benchmarks, load_policies, load_saving_tips
+from src.data_loader import load_expense_benchmarks, load_glossary, load_policies, load_saving_tips
+from src.easy_explain import find_terms, original_text
 from src.local_policies import count_by_region_and_category, filter_local_policies
 from src.recommender import count_good_matches, income_percent, recommend_policies
 from src.saving_coach import CATEGORIES, check_expenses
@@ -53,6 +54,36 @@ def data_badge(row):
         if row["status_note"]:
             st.write(f"**참고**: {row['status_note']}")
         st.caption(f"✅ 실제 정책 · 2026-10-16 확인 · [원문 보기]({row['source_url']})")
+
+
+@st.cache_data
+def get_glossary():
+    return load_glossary()
+
+
+def easy_explanation(row):
+    """공고 내용(왼쪽)과 쉬운 설명(오른쪽)을 나란히 보여줍니다."""
+    original = original_text(row)
+    left, right = st.columns(2)
+    with left:
+        st.markdown("**📄 공고 내용**")
+        st.markdown("\n".join(f"- {line}" for line in original.split("\n")))
+    with right:
+        st.markdown("**🗣️ 쉬운 설명**")
+        st.info(row["easy_text"])
+
+    terms = find_terms(original + row["easy_text"], get_glossary())
+    if terms:
+        st.markdown("**📖 어려운 말 풀이**")
+        for term, meaning in terms:
+            st.write(f"- **{term}**: {meaning}")
+
+
+def easy_button(row):
+    """추천 카드 안에서 '쉽게 설명 보기'를 펼쳐 볼 수 있게 합니다."""
+    if row["easy_text"]:
+        with st.expander("🗣️ 쉽게 설명 보기"):
+            easy_explanation(row)
 
 
 def real_only_toggle(key: str) -> bool:
@@ -214,6 +245,7 @@ def input_page():
             for reason in row["reasons"]:
                 st.write(f"- {reason}")
             st.write(f"**신청 방법**: {row['application_method']} · {row['organization']}")
+            easy_button(row)
             data_badge(row)
 
     st.markdown("### ✂️ 생활비 절감 진단")
@@ -279,6 +311,9 @@ def local_page():
             st.write(f"**대상 연령**: {row['target_age']}세 · **가구형태**: {row['household_type'].replace('|', ', ')}")
             st.write(f"**소득 조건**: {row['income_condition']} · **주거형태**: {row['housing_type'].replace('|', ', ')}")
             st.write(f"**신청 방법**: {row['application_method']} · {row['organization']}")
+            if row["easy_text"]:
+                st.divider()
+                easy_explanation(row)
             data_badge(row)
 
     st.markdown("#### 부울경 분야별 지원사업 수")
