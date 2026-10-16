@@ -1,0 +1,13 @@
+item_id,category,description,estimated_saving,source_url,is_mock
+TIP-001,통신비,[테스트] 알뜰폰 요금제로 바꾸면 같은 데이터를 더 싸게 쓸 수 있습니다,20000,https://example.com/mock/TIP-001,True
+TIP-002,통신비,[테스트] 단말기 할인 대신 선택약정 할인(요금 25%)을 받을 수 있는지 확인해 보세요,15000,https://example.com/mock/TIP-002,True
+TIP-003,통신비,[테스트] 실제 데이터 사용량보다 큰 요금제를 쓰고 있다면 한 단계 낮춰 보세요,10000,https://example.com/mock/TIP-003,True
+TIP-004,통신비,[테스트] 가족끼리 인터넷·휴대폰을 묶으면 결합 할인을 받을 수 있습니다,12000,https://example.com/mock/TIP-004,True
+TIP-005,공공요금,[테스트] 기초생활수급자·차상위 가구는 전기요금 복지할인을 신청할 수 있습니다,8000,https://example.com/mock/TIP-005,True
+TIP-006,공공요금,[테스트] 에너지바우처 대상이면 난방·냉방비 일부를 지원받을 수 있습니다,15000,https://example.com/mock/TIP-006,True
+TIP-007,공공요금,[테스트] 전기를 전년보다 적게 쓰면 캐시백을 주는 제도를 확인해 보세요,3000,https://example.com/mock/TIP-007,True
+TIP-008,공공요금,[테스트] 다자녀·장애인 가구는 도시가스 요금 감면 대상일 수 있습니다,6000,https://example.com/mock/TIP-008,True
+TIP-009,보험료,[테스트] 실손보험이 두 개 이상이면 중복 가입인지 확인해 보세요,30000,https://example.com/mock/TIP-009,True
+TIP-010,보험료,[테스트] 자동차를 적게 탄다면 자동차보험 마일리지 특약을 확인해 보세요,10000,https://example.com/mock/TIP-010,True
+TIP-011,보험료,[테스트] 같은 보장이라도 온라인(다이렉트) 가입이 더 저렴한 경우가 많습니다,8000,https://example.com/mock/TIP-011,True
+TIP-012,보험료,[테스트] 소득이 줄었다면 건강보험료 조정 신청이 가능한지 알아보세요,20000,https://example.com/mock/TIP-012,True

@@ -1,0 +1,13 @@
+category,household_size,average_monthly,low_monthly,note,source_url,is_mock
+통신비,1,53966,24824,2025 가계동향조사 통신서비스(전화·휴대폰·인터넷 요금)·low=평균×0.46(1분위/전체 비율),https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1L9U105,False
+통신비,2,90622,41686,2025 가계동향조사 통신서비스(전화·휴대폰·인터넷 요금)·low=평균×0.46(1분위/전체 비율),https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1L9U105,False
+통신비,3,139622,64226,2025 가계동향조사 통신서비스(전화·휴대폰·인터넷 요금)·low=평균×0.46(1분위/전체 비율),https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1L9U105,False
+통신비,4,170451,78407,2025 가계동향조사 통신서비스(전화·휴대폰·인터넷 요금)·low=평균×0.46(1분위/전체 비율),https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1L9U105,False
+공공요금,1,81320,56924,2025 가계동향조사 연료비+상하수도및폐기물처리 합계(앱에서 합산)·low=평균×0.7(1분위/전체 비율),https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1L9U105,False
+공공요금,2,140386,98270,2025 가계동향조사 연료비+상하수도및폐기물처리 합계(앱에서 합산)·low=평균×0.7(1분위/전체 비율),https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1L9U105,False
+공공요금,3,176200,123340,2025 가계동향조사 연료비+상하수도및폐기물처리 합계(앱에서 합산)·low=평균×0.7(1분위/전체 비율),https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1L9U105,False
+공공요금,4,205284,143699,2025 가계동향조사 연료비+상하수도및폐기물처리 합계(앱에서 합산)·low=평균×0.7(1분위/전체 비율),https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1L9U105,False
+보험료,1,46693,15876,2025 가계동향조사 기타상품·서비스>보험(미가입 가구 포함 평균)·low=평균×0.34(1분위/전체 비율),https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1L9U105,False
+보험료,2,102986,35015,2025 가계동향조사 기타상품·서비스>보험(미가입 가구 포함 평균)·low=평균×0.34(1분위/전체 비율),https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1L9U105,False
+보험료,3,141393,48074,2025 가계동향조사 기타상품·서비스>보험(미가입 가구 포함 평균)·low=평균×0.34(1분위/전체 비율),https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1L9U105,False
+보험료,4,149766,50920,2025 가계동향조사 기타상품·서비스>보험(미가입 가구 포함 평균)·low=평균×0.34(1분위/전체 비율),https://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_1L9U105,False
